@@ -20,7 +20,7 @@ async def _resolve_last_used(
     last_used_project = await project_repo.get_by_id(last_used_project_id)
     if last_used_project is not None:
         return StartupProjectSelection(
-            project_id=str(last_used_project.id),
+            project_id=last_used_project.id,
             source=StartupProjectSelectionSource.LAST_USED,
         )
 
@@ -33,7 +33,7 @@ async def _resolve_active_pipeline(pipeline_repo: PipelineRepository) -> Startup
     if active_pipeline is None:
         return None
     return StartupProjectSelection(
-        project_id=str(active_pipeline.project_id),
+        project_id=active_pipeline.project_id,
         source=StartupProjectSelectionSource.ACTIVE_PIPELINE,
     )
 
@@ -43,7 +43,7 @@ async def _resolve_first_project(project_repo: ProjectRepository) -> StartupProj
     if first_project is None:
         return None
     return StartupProjectSelection(
-        project_id=str(first_project.id),
+        project_id=first_project.id,
         source=StartupProjectSelectionSource.FIRST_PROJECT,
     )
 
@@ -80,7 +80,7 @@ class ProjectSelectionService:
     async def set_last_used_project(project_id: ShortUUID) -> None:
         async with get_async_db_session_ctx() as session:
             project_repo = ProjectRepository(session)
-            if await project_repo.get_by_id(str(project_id)) is None:
+            if await project_repo.get_by_id(project_id) is None:
                 raise ResourceNotFoundError(resource_type=ResourceType.PROJECT, resource_id=str(project_id))
 
             app_state_repo = AppStateRepository(session)
