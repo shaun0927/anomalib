@@ -20,4 +20,3 @@ sink/
 .idea
 .DS_Store
 .anomalib-studio.db
-data-local/
