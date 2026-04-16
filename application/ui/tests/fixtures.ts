@@ -16,7 +16,7 @@ const test = testBase.extend<Fixtures>({
         initialHandlers: [
             http.get('/api/projects/startup-selection', ({ response }) => {
                 return response(200).json({
-                    project_id: '12',
+                    project_id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
                     source: 'last_used',
                 });
             }),
@@ -24,14 +24,14 @@ const test = testBase.extend<Fixtures>({
                 return response(200).json({
                     projects: [
                         {
-                            id: '12',
-                            name: 'Project #12',
+                            id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+                            name: 'Project #1',
                         },
                     ],
                 });
             }),
             http.put('/api/projects/last-used', ({ response }) => {
-                return response(200).json({});
+                return new Response(null, { status: 204 });
             }),
             http.get('/api/projects/{project_id}', ({ response }) => {
                 return response(200).json({
@@ -42,7 +42,7 @@ const test = testBase.extend<Fixtures>({
             http.get('/api/projects/{project_id}/pipeline', ({ response }) => {
                 return response(200).json({
                     status: 'idle',
-                    project_id: '12',
+                    project_id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
                 });
             }),
             http.get('/api/projects/{project_id}/images', ({ response }) => {

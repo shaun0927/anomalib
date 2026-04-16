@@ -61,7 +61,6 @@ def upgrade() -> None:
         sa.Column("updated_at", sa.DateTime(), server_default=sa.text("(CURRENT_TIMESTAMP)"), nullable=False),
         sa.ForeignKeyConstraint(["project_id"], ["projects.id"]),
         sa.PrimaryKeyConstraint("id"),
-        sa.UniqueConstraint("name", "project_id"),
     )
 
     # Create sinks table
@@ -78,7 +77,6 @@ def upgrade() -> None:
         sa.Column("updated_at", sa.DateTime(), server_default=sa.text("(CURRENT_TIMESTAMP)"), nullable=False),
         sa.ForeignKeyConstraint(["project_id"], ["projects.id"]),
         sa.PrimaryKeyConstraint("id"),
-        sa.UniqueConstraint("name", "project_id"),
     )
 
     # Create media table
@@ -129,6 +127,16 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
     )
 
+    # Create app_state table
+    op.create_table(
+        "app_state",
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("last_used_project_id", sa.String(), nullable=True),
+        sa.Column("updated_at", sa.DateTime(), server_default=sa.text("(CURRENT_TIMESTAMP)"), nullable=False),
+        sa.ForeignKeyConstraint(["last_used_project_id"], ["projects.id"], ondelete="SET NULL"),
+        sa.PrimaryKeyConstraint("id"),
+    )
+
     # Create pipelines table (depends on projects, sources, sinks, models)
     op.create_table(
         "pipelines",
@@ -154,6 +162,7 @@ def upgrade() -> None:
 def downgrade() -> None:
     """Downgrade schema - drop all tables in reverse order."""
     # Drop tables in reverse order of dependencies
+    op.drop_table("app_state")
     op.drop_table("pipelines")
     op.drop_table("models")
     op.drop_table("dataset_snapshot")

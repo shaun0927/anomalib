@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Intel Corporation
+# Copyright (C) 2026 Intel Corporation
 # SPDX-License-Identifier: Apache-2.0
 
 from enum import StrEnum
@@ -15,7 +15,7 @@ class StartupProjectSelectionSource(StrEnum):
 
 
 class StartupProjectSelection(BaseModel):
-    project_id: UUID | None = None
+    project_id: str | None = None
     source: StartupProjectSelectionSource
 
 
